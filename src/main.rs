@@ -111,7 +111,7 @@ async fn main() -> std::io::Result<()> {
             .route("/tasks/{id}", web::delete().to(delete_task))
     })
     .bind("127.0.0.1:8087")?
-    .workers(4)
+    .workers(4) // its workers
     .run()
     .await
 }
