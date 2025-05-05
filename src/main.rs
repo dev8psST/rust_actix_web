@@ -2,6 +2,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder, middleware::Logge
 use serde::{Deserialize, Serialize};
 use sqlx::{sqlite::SqlitePool, FromRow};
 use log::info;
+use actix_cors::Cors;
 
 // Модель для задачи
 #[derive(Serialize, Deserialize, FromRow)]
@@ -102,13 +103,24 @@ async fn main() -> std::io::Result<()> {
 
     // Запуск сервера
     HttpServer::new(move || {
+        let cors = Cors::default()
+        .allowed_origin("http://localhost:5173") // Your React frontend origin
+        .allowed_methods(vec!["GET", "POST","DELETE","PUT"])
+        .allowed_headers(vec![
+            actix_web::http::header::CONTENT_TYPE,
+            actix_web::http::header::ACCEPT,
+        ])
+        .max_age(3600);
+
         App::new()
             .wrap(Logger::default())
+            .wrap(cors)
             .app_data(web::Data::new(pool.clone()))
             .route("/tasks", web::post().to(create_task))
             .route("/tasks", web::get().to(get_tasks))
             .route("/tasks/{id}", web::put().to(update_task))
             .route("/tasks/{id}", web::delete().to(delete_task))
+            
     })
     .bind("127.0.0.1:8087")?
     .workers(4) 
