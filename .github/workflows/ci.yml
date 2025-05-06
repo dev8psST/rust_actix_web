@@ -36,6 +36,19 @@ jobs:
         run: npx playwright install
         working-directory: tests
 
+        # Step : Set up Python for pytest
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # Use Python 3.11
+          cache: 'pip' # Cache pip dependencies
+          cache-dependency-path: tests/python/requirements.txt
+
+      # Step : Install Python dependencies
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+        working-directory: tests/python
+
       # Step 5: Set up Rust
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
@@ -57,6 +70,11 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
         working-directory: tests
+
+        # Step : Run pytest tests
+      - name: Run pytest tests
+        run: pytest test_api.py --verbose
+        working-directory: tests/python
 
       # Step 9: Upload test report
       - name: Upload Playwright report
