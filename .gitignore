@@ -1,3 +1,10 @@
 /target
 /src/app
 /src/copy_old_main.rs.copy
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
