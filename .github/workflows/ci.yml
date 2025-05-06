@@ -1,0 +1,68 @@
+# ci.yml
+name: CI
+
+# Trigger the workflow on push and pull requests to main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Playwright API Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Use Node.js 20
+          cache: 'npm' # Cache npm dependencies
+          cache-dependency-path: tests/package.json
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm ci
+        working-directory: tests
+
+      # Step 4: Install Playwright
+      - name: Install Playwright
+        run: npx playwright install
+        working-directory: tests
+
+      # Step 5: Set up Rust
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      # Step 6: Build and start Rust server
+      - name: Build and start Rust server
+        run: cargo run &
+        working-directory: .
+
+      # Step 7: Wait for the backend to be ready
+      - name: Wait for backend
+        run: |
+          timeout 30s bash -c "until curl -s http://localhost:8087/tasks; do sleep 1; done" || exit 1
+
+      # Step 8: Run Playwright tests
+      - name: Run Playwright tests
+        run: npx playwright test
+        working-directory: tests
+
+      # Step 9: Upload test report
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/playwright-report/
+          retention-days: 30

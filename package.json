@@ -19,5 +19,9 @@
   "devDependencies": {
     "@playwright/test": "^1.52.0",
     "@types/node": "^22.15.12"
+  },
+  "dependencies": {
+    "@dataform/sqlx": "^1.6.4",
+    "sqlx": "^2.7.3"
   }
 }
