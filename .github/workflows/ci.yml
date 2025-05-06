@@ -42,7 +42,7 @@ jobs:
         with:
           python-version: '3.11' # Use Python 3.11
           cache: 'pip' # Cache pip dependencies
-          cache-dependency-path: tests/python/requirements.txt
+          cache-dependency-path: tests/tests/python/requirements.txt
 
       # Step : Install Python dependencies
       - name: Install Python dependencies
