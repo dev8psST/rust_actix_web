@@ -73,7 +73,7 @@ jobs:
 
         # Step : Run pytest tests
       - name: Run pytest tests
-        run: pytest test_api.py --verbose
+        run: pytest test-api.py --verbose
         working-directory: tests/tests/python/
 
       # Step 9: Upload test report
