@@ -47,7 +47,7 @@ jobs:
       # Step : Install Python dependencies
       - name: Install Python dependencies
         run: pip install -r requirements.txt
-        working-directory: tests/python
+        working-directory: tests/tests/python
 
       # Step 5: Set up Rust
       - name: Set up Rust
