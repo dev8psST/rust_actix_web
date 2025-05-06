@@ -51,7 +51,7 @@ jobs:
       # Step 7: Wait for the backend to be ready
       - name: Wait for backend
         run: |
-          timeout 30s bash -c "until curl -s http://localhost:8087/tasks; do sleep 1; done" || exit 1
+          timeout 60s bash -c "until curl -s http://localhost:8087/tasks; do sleep 1; done" || exit 1
 
       # Step 8: Run Playwright tests
       - name: Run Playwright tests
